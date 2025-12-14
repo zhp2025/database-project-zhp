@@ -3,3 +3,6 @@ Flask
 Flask-SQLAlchemy
 Flask-Login
 Werkzeug
+python-dotenv（可选：环境变量）
+
+(如果要搜索增强) SQLAlchemy 的 ilike 已够用；全文检索后续再议
