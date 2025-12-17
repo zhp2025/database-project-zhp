@@ -1,34 +1,10 @@
 {% extends "base.html" %}
-{% block title %}我的笔记 · 历史文献数据库{% endblock %}
+{% block title %}我的笔记 · 墨守方志地方文书管理系统{% endblock %}
 
 {% block content %}
 <div class="grid grid-2">
-  <section class="card">
-    <div class="card-header">
-      <div>
-        <h1 class="card-title">新建 / 编辑笔记</h1>
-        <p class="card-subtitle">可选择关联某篇文书，也可作为独立笔记</p>
-      </div>
-    </div>
-
-    <div class="card-body">
-      <form class="form" method="post" action="{{ url_for('notes_save') }}">
-        <div class="stack gap-xs">
-          <label class="label" for="document_id">关联文书 ID（可选）</label>
-          <input class="input" id="document_id" name="document_id" placeholder="例如：12（留空则为独立笔记）">
-        </div>
-
-        <div class="stack gap-xs">
-          <label class="label" for="content">内容</label>
-          <textarea class="textarea" id="content" name="content" placeholder="摘录、训诂、对照、心得……" required></textarea>
-        </div>
-
-        <button class="btn btn-primary" type="submit">保存</button>
-      </form>
-    </div>
-  </section>
-
-  <section class="card">
+  <!-- 我的笔记列表放在左边 -->
+  <section class="card" style="grid-column: 1 / 2;">
     <div class="card-header">
       <div>
         <h2 class="card-title">我的笔记列表</h2>
@@ -60,6 +36,32 @@
           <p class="muted" style="margin:0;">暂无笔记。</p>
         {% endif %}
       </div>
+    </div>
+  </section>
+
+  <!-- 新建 / 编辑笔记放在右边 -->
+  <section class="card" style="grid-column: 2 / 3;">
+    <div class="card-header">
+      <div>
+        <h1 class="card-title">新建 / 编辑笔记</h1>
+        <p class="card-subtitle">可选择关联某篇文书，也可作为独立笔记</p>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <form class="form" method="post" action="{{ url_for('notes') }}">
+        <div class="stack gap-xs">
+          <label class="label" for="document_id">关联文书 ID（可选）</label>
+          <input class="input" id="document_id" name="document_id" placeholder="例如：12（留空则为独立笔记）">
+        </div>
+
+        <div class="stack gap-xs">
+          <label class="label" for="content">内容</label>
+          <textarea class="textarea" id="content" name="content" placeholder="摘录、训诂、对照、心得……" required></textarea>
+        </div>
+
+        <button class="btn btn-primary" type="submit">保存</button>
+      </form>
     </div>
   </section>
 </div>
