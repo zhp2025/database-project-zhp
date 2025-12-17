@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}首页 · 墨守方志地方文书管理系统{% endblock %}
+
+{% block content %}
+<!-- 首页的展示条部分 -->
+<div class="hero-banner">
+  <img src="{{ url_for('static', filename='home-image.png') }}" alt="历史文献图像" class="hero-image">
+</div>
+
+<!-- **搜索部分放在图片下方，水平排列** -->
+<div class="search-section">
+  <div class="container">
+    <form class="search-form" action="{{ url_for('search') }}" method="get">
+      <input type="text" name="q" placeholder="请输入文书名称，如“永泰文书”..." class="search-input">
+      <button type="submit" class="btn btn-primary">搜索</button>
+      <button type="button" class="btn btn-ghost">高级搜索</button>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

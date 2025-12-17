@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{% block title %}墨守方志地方文书管理系统{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <script defer src="{{ url_for('static', filename='script.js') }}"></script>
+</head>
+<body>
+   <header class="site-header">
+    <div class="container header-inner">
+      <!-- Logo 替换为数据库名称的 Logo -->
+      <a class="brand" href="{{ url_for('documents') }}">
+        <img src="{{ url_for('static', filename='logo.jpg') }}" alt="墨守方志地方文书管理系统" class="logo">
+      </a>
+<!-- 导航栏 -->
+      <nav class="nav">
+        <a class="nav-item {% if request.endpoint == 'home' %}active{% endif %}"
+         href="{{ url_for('home') }}">首页</a>
+        <a class="nav-item {% if request.path.startswith('/documents') %}active{% endif %}"
+           href="{{ url_for('documents') }}">文书</a>
+        <a class="nav-item {% if request.path.startswith('/favorites') %}active{% endif %}"
+           href="{{ url_for('favorites') }}">收藏</a>
+        <a class="nav-item {% if request.path.startswith('/notes') %}active{% endif %}"
+           href="{{ url_for('notes')}}">笔记</a>
+        <a class="nav-item {% if request.path.startswith('/history') %}active{% endif %}"
+           href="{{ url_for('history') }}">阅读记录</a>
+      </nav>
+
+      <!-- **登录和注册按钮** -->
+      <div class="header-actions">
+        <a class="btn btn-ghost" href="{{ url_for('login') }}">登录</a>
+        <a class="btn btn-primary" href="{{ url_for('register') }}">注册</a>
+      </div>
+    </div>
+  </header>
+         <!-- 页面内容由各自的模板定义 -->
+  {% block content %}{% endblock %}
+
+  <footer class="site-footer">
+  <div class="container footer-inner">
+    <!-- 页脚左侧内容：公司名称、地址、电话等 -->
+    <div class="footer-left">
+      <h4>北京大学</h4>
+      <p>地址：北京市海淀区学院路25号北京大学科技园A座302室</p>
+      <p>电话：010-8888-2025</p>
+      <p>邮箱：1217@pku.edu.cn</p>
+    </div>
+  </div>
+</footer>

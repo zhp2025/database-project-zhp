@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}我的收藏 · 历史文献数据库{% endblock %}
+
+{% block content %}
+<section class="card">
+  <div class="card-header">
+    <div>
+      <h1 class="card-title">我的收藏</h1>
+      <p class="card-subtitle">你标记过的文书会出现在这里</p>
+    </div>
+    <div class="row gap-sm">
+      <a class="btn btn-ghost" href="{{ url_for('documents') }}">去浏览文书</a>
+    </div>
+  </div>
+
+  <div class="card-body">
+    <div class="grid grid-2">
+      {% if favorites %}
+        {% for doc in favorites %}
+          <article class="card">
+            <div class="card-header">
+              <div>
+                <h2 class="card-title">
+                  <a href="{{ url_for('document_detail', doc_id=doc.id) }}">
+                    {{ doc.title }}
+                  </a>
+                </h2>
+                <p class="card-subtitle">{{ doc.author or '佚名' }} · {{ doc.period or '时期未标注' }}</p>
+              </div>
+              <button class="btn btn-danger btn-icon js-fav-toggle"
+                      type="button"
+                      title="取消收藏"
+                      data-doc-id="{{ doc.id }}">
+                ★
+              </button>
+            </div>
+            <div class="card-body">
+              <p class="muted" style="margin:0;">
+                {{ (doc.content[:120] ~ '…') if doc.content else '暂无摘要' }}
+              </p>
+            </div>
+            <div class="card-footer">
+              <span class="tag">已收藏</span>
+              <a class="btn btn-primary"
+                 href="{{ url_for('document_detail', doc_id=doc.id) }}">
+                阅读
+              </a>
+            </div>
+          </article>
+        {% endfor %}
+      {% else %}
+        <div class="card" style="grid-column: 1 / -1;">
+          <div class="card-body">
+            <p class="muted" style="margin:0;">你还没有收藏任何文书。</p>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}

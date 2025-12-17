@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}注册 · 墨守方志地方文书管理系统{% endblock %}
+
+{% block content %}
+<section class="card" style="max-width: 720px; margin: 0 auto;">
+  <div class="card-header">
+    <div>
+      <h1 class="card-title">创建账号</h1>
+      <p class="card-subtitle">用于同步收藏、笔记与阅读记录</p>
+    </div>
+  </div>
+
+  <div class="card-body">
+    <form class="form" method="post" action="{{ url_for('register')}}">
+      <div class="form-row">
+        <div class="stack gap-xs">
+          <label class="label" for="username">用户名</label>
+          <input class="input" id="username" name="username" placeholder="例如：hanlin_01" autocomplete="username" required>
+        </div>
+        <div class="stack gap-xs">
+          <label class="label" for="email">邮箱</label>
+          <input class="input" id="email" name="email" type="email" placeholder="you@example.com" autocomplete="email" required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="stack gap-xs">
+          <label class="label" for="password">密码</label>
+          <input class="input" id="password" name="password" type="password" placeholder="至少 6 位" autocomplete="new-password" required>
+        </div>
+        <div class="stack gap-xs">
+          <label class="label" for="password2">确认密码</label>
+          <input class="input" id="password2" name="password2" type="password" placeholder="再次输入密码" autocomplete="new-password" required>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" type="submit">注册</button>
+      <a class="btn btn-ghost" href="{{ url_for('login') }}">已有账号？去登录</a>
+
+      <p class="muted" style="font-size: 13px; margin: 10px 0 0;">
+        注册即表示你同意团队的使用规范。
+      </p>
+    </form>
+  </div>
+</section>
+{% endblock %}

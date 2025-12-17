@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}登录 · 墨守方志地方文书管理系统{% endblock %}
+
+{% block content %}
+<div class="grid grid-2">
+  <section class="card">
+    <div class="card-header">
+      <div>
+        <h1 class="card-title">欢迎回来</h1>
+        <p class="card-subtitle">登录后可收藏、写笔记并记录阅读历史</p>
+      </div>
+    </div>
+    <div class="card-body">
+      <form class="form" method="post" action="{{ url_for('login') }}">
+        <div class="stack gap-xs">
+          <label class="label" for="username">用户名 / 邮箱</label>
+          <input class="input" id="username" name="username" placeholder="请输入用户名或邮箱" autocomplete="username" required>
+        </div>
+
+        <div class="stack gap-xs">
+          <label class="label" for="password">密码</label>
+          <input class="input" id="password" name="password" type="password" placeholder="请输入密码" autocomplete="current-password" required>
+        </div>
+
+        <div class="row gap-sm" style="justify-content:space-between; flex-wrap:wrap;">
+          <label class="row gap-xs muted" style="font-size:13px;">
+            <input type="checkbox" name="remember" style="transform: translateY(1px);">
+            记住我
+          </label>
+          <span class="muted" style="font-size:13px;">忘记密码：后续可扩展</span>
+        </div>
+
+        <button class="btn btn-primary" type="submit">登录</button>
+        <a class="btn btn-ghost" href="{{ url_for('register') }}">没有账号？去注册</a>
+      </form>
+    </div>
+  </section>
+
+  <aside class="card">
+    <div class="card-header">
+      <div>
+        <h2 class="card-title">使用提示</h2>
+        <p class="card-subtitle">浅棕主题阅读更护眼，建议使用“文书详情页”的阅读模式</p>
+      </div>
+    </div>
+    <div class="card-body prose">
+      <blockquote>“读史使人明智。”</blockquote>
+      <p class="muted">后续可在此放置公告、系统更新、或示例账号信息。</p>
+    </div>
+  </aside>
+</div>
+{% endblock %}

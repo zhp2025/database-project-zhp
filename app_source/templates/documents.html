@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% block title %}文书列表 · 墨守方志地方文书管理系统{% endblock %}
+
+{% block content %}
+<section class="card">
+  <div class="card-header">
+    <div>
+      <h1 class="card-title">文书列表</h1>
+      <p class="card-subtitle">浏览、筛选并进入详情页阅读</p>
+    </div>
+    <div class="row gap-sm">
+      <a class="btn btn-ghost" href="{{ url_for('favorites') }}">查看收藏</a>
+    </div>
+  </div>
+
+  <div class="card-body">
+    <!-- Search / Filters -->
+    <form class="form" method="get" action="{{ url_for('search') }}">
+      <div class="form-row">
+        <div class="stack gap-xs">
+          <label class="label" for="q">关键词</label>
+          <input class="input" id="q" name="q" placeholder="标题 / 作者 / 正文关键字" value="{{ request.args.get('q','') }}">
+        </div>
+        <div class="stack gap-xs">
+          <label class="label" for="period">时期 / 朝代</label>
+          <select class="select" id="period" name="period">
+            <option value="">不限</option>
+            <option value="先秦">先秦</option>
+            <option value="秦汉">秦汉</option>
+            <option value="魏晋南北朝">魏晋南北朝</option>
+            <option value="隋唐">隋唐</option>
+            <option value="宋元">宋元</option>
+            <option value="明清">明清</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row gap-sm" style="justify-content:space-between; flex-wrap:wrap;">
+        <div class="row gap-sm" style="flex-wrap:wrap;">
+          <span class="tag">支持：q / period / tag</span>
+          {% if request.args.get('tag') %}
+            <span class="tag">当前标签：{{ request.args.get('tag') }}</span>
+          {% endif %}
+        </div>
+        <div class="row gap-sm">
+          <button class="btn btn-primary" type="submit">搜索</button>
+          <a class="btn btn-ghost" href="{{ url_for('documents') }}">清空</a>
+        </div>
+      </div>
+    </form>
+
+    <hr class="hr">
+
+    <!-- Document list -->
+    <div class="grid grid-2">
+      {% if documents %}
+        {% for doc in documents %}
+          <article class="card">
+            <div class="card-header">
+              <div>
+                <h2 class="card-title">
+                  <a href="{{ url_for('document_detail', doc_id=doc.id)}}">
+                    {{ doc.title }}
+                  </a>
+                </h2>
+                <p class="card-subtitle">
+                  {{ doc.author or '佚名' }} · {{ doc.period or '时期未标注' }}
+                </p>
+              </div>
+              <button class="btn btn-ghost btn-icon js-fav-toggle"
+                      type="button"
+                      aria-label="收藏"
+                      data-doc-id="{{ doc.id }}">
+                ☆
+              </button>
+            </div>
+
+            <div class="card-body">
+              <p class="muted" style="margin:0;">
+                {{ (doc.content[:120] ~ '…') if doc.content else '暂无摘要' }}
+              </p>
+            </div>
+
+            <div class="card-footer">
+              <div class="row gap-xs" style="flex-wrap:wrap;">
+                {% if doc.tags %}
+                  {% for t in doc.tags.split(',') %}
+                    <a class="tag" href="{{ (url_for('search') )}}">{{ t|trim }}</a>
+                  {% endfor %}
+                {% else %}
+                  <span class="tag">无标签</span>
+                {% endif %}
+              </div>
+
+              <a class="btn btn-primary"
+                 href="{{ url_for('document_detail', doc_id=doc.id) }}">
+                阅读
+              </a>
+            </div>
+          </article>
+        {% endfor %}
+      {% else %}
+        <div class="card" style="grid-column: 1 / -1;">
+          <div class="card-body">
+            <p class="muted" style="margin:0;">暂无数据。后端可先传入 documents 列表进行渲染。</p>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Pagination placeholder -->
+    <div class="pagination">
+      <a class="page" href="#">«</a>
+      <a class="page active" href="#">1</a>
+      <a class="page" href="#">2</a>
+      <a class="page" href="#">3</a>
+      <a class="page" href="#">»</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

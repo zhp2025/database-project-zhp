@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}阅读记录 · 墨守方志地方文书管理系统{% endblock %}
+
+{% block content %}
+<section class="card">
+  <div class="card-header">
+    <div>
+      <h1 class="card-title">阅读记录</h1>
+      <p class="card-subtitle">你最近打开过的文书会被记录。</p>
+    </div>
+  </div>
+
+  <div class="card-body">
+    <table class="table">
+      <thead>
+        <tr>
+          <th style="width: 220px;">最后阅读时间</th>
+          <th>文书</th>
+          <th style="width: 120px;">阅读次数</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if history %}
+          {% for h in history %}
+            <tr>
+              <td class="muted">{{ h.last_read_at }}</td>
+              <td>
+                <a href="{{ url_for('document_detail', doc_id=h.document_id) }}">
+                  {{ h.title or ('文书 #' ~ h.document_id) }}
+                </a>
+              </td>
+              <td class="muted">{{ h.read_count or 1 }}</td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="3" class="muted">暂无阅读记录。</td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+
+    <div class="pagination">
+      <a class="page" href="#">«</a>
+      <a class="page active" href="#">1</a>
+      <a class="page" href="#">2</a>
+      <a class="page" href="#">»</a>
+    </div>
+  </div>
+</section>
+{% endblock %}
