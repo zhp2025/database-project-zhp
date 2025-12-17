@@ -103,8 +103,7 @@ class Document(Base):
 
     # 关系
     resources = relationship("Resource", back_populates="document")
-    notes = relationship("Note", back_populates="document")
-    favorites = relationship("Favorite", back_populates="document")
+    # Note: notes和favorites现在通过resource间接访问（符合第三范式）
 
 
 class Resource(Base):
@@ -132,7 +131,6 @@ class Note(Base):
 
     annotation_id = Column(BigInteger, primary_key=True, autoincrement=True)
     user_id = Column(BigInteger, ForeignKey("user_info.user_id"), nullable=False)
-    document_id = Column(BigInteger, ForeignKey("document_info.document_id"), nullable=False)
     resource_id = Column(BigInteger, ForeignKey("resource_content.resource_id"), nullable=False)
     annotation_content = Column(Text)
     annotation_tags = Column(String(20))
@@ -140,8 +138,13 @@ class Note(Base):
     update_time = Column(DateTime, default=datetime.utcnow, nullable=False)
 
     user = relationship("User", back_populates="notes")
-    document = relationship("Document", back_populates="notes")
     resource = relationship("Resource", back_populates="notes")
+    
+    # 通过resource访问document（消除传递依赖）
+    @property
+    def document(self):
+        """通过resource访问document"""
+        return self.resource.document if self.resource else None
 
 
 class Favorite(Base):
@@ -151,14 +154,18 @@ class Favorite(Base):
 
     collection_id = Column(BigInteger, primary_key=True, autoincrement=True)
     user_id = Column(BigInteger, ForeignKey("user_info.user_id"), nullable=False)
-    document_id = Column(BigInteger, ForeignKey("document_info.document_id"), nullable=False)
     resource_id = Column(BigInteger, ForeignKey("resource_content.resource_id"), nullable=False)
     collection_tags = Column(String(20))
     collection_time = Column(DateTime, default=datetime.utcnow, nullable=False)
 
     user = relationship("User", back_populates="favorites")
-    document = relationship("Document", back_populates="favorites")
     resource = relationship("Resource", back_populates="favorites")
+    
+    # 通过resource访问document（消除传递依赖）
+    @property
+    def document(self):
+        """通过resource访问document"""
+        return self.resource.document if self.resource else None
 
 
 # 视图模型（只读），以文书资源统计视图为例
@@ -247,8 +254,10 @@ def get_favorite_documents_by_user(session: Session, user_id: int) -> List[Docum
 
     return (
         session.query(Document)
-        .join(Favorite, Favorite.document_id == Document.document_id)
+        .join(Resource, Resource.document_id == Document.document_id)
+        .join(Favorite, Favorite.resource_id == Resource.resource_id)
         .filter(Favorite.user_id == user_id)
+        .distinct()
         .order_by(Document.document_id)
         .all()
     )
