@@ -1,47 +1,33 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
-{% block title %}文书详情 - 墨守方志地方文书管理系统{% endblock %}
+{% block title %}文书详情 - {{ document.document_name }}{% endblock %}
 
 {% block content %}
-<div class="document-detail">
-  <!-- 文书封面部分 -->
-  <div class="document-cover">
-    <img src="{{ url_for('static', filename='document-cover.jpg') }}" alt="文书封面" class="cover-image">
+<section class="card">
+  <div class="card-header">
+    <h1 class="card-title">{{ document.document_name }}</h1>
+    <p class="card-subtitle">{{ document.document_region }}</p>
   </div>
 
-  <!-- 文书信息部分 -->
-  <div class="document-info">
-    <div class="info-item">
-      <label>立契时间：</label>
-      <p>{{ document.sign_date or '未标注' }}</p>
-    </div>
-    <div class="info-item">
-      <label>立契人：</label>
-      <p>{{ document.signer or '未标注' }}</p>
-    </div>
-    <div class="info-item">
-      <label>参与人：</label>
-      <p>{{ document.participants or '未标注' }}</p>
-    </div>
-    <div class="info-item">
-      <label>合同类型：</label>
-      <p>{{ document.contract_type or '未标注' }}</p>
-    </div>
-  </div>
+  <div class="card-body">
+    <p>{{ document.document_intro or '暂无简介' }}</p>
 
-  <!-- 文书资源展示部分 -->
-  <div class="document-resources">
-    <h3>文书资源</h3>
-    <ul>
-      <li><a href="{{ url_for('document_resource', resource_id=document.id) }}">文书原文</a></li>
-      <li><a href="{{ url_for('document_translation', resource_id=document.id) }}">白话文翻译</a></li>
-      <li><a href="{{ url_for('document_simplified', resource_id=document.id) }}">简体翻译</a></li>
-    </ul>
+    <!-- 资源列表展示 -->
+    <div class="document-resources">
+      <h3>资源</h3>
+      <ul>
+        {% for resource in resources %}
+          <li>
+            <a href="{{ url_for('document_resources', resource_id=resource.resource_id) }}">
+              {{ resource.resource_name }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
   </div>
-
-  <!-- 收藏按钮 -->
-  <div class="document-actions">
-    <a href="{{ url_for('favorites.add', document_id=document.id) }}" class="btn btn-primary">添加到收藏</a>
-  </div>
-</div>
+    
+</section>
 {% endblock %}
+
+

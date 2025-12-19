@@ -6,6 +6,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, jso
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
+
 # 导入model.py的核心模型与函数（适配db.sql）
 from model import (
     get_session, User, Document, Resource, Note, Favorite, AccessRecord, ResourceInfo,
@@ -15,6 +16,9 @@ from model import (
     create_access_record, get_access_records_by_user,
     get_favorite_documents_by_user, fulltext_search_resources, count_resources_by_document
 )
+
+from sqlalchemy import or_
+
 
 # ============================================================
 # 1. Flask应用初始化
@@ -54,6 +58,7 @@ def inject_globals():
         "app_name": "地方文书管理系统"
     }
 
+
 # ============================================================
 # 4. 错误处理
 # ============================================================
@@ -66,6 +71,34 @@ def page_not_found(e):
 def internal_server_error(e):
     """500页面"""
     return render_template('500.html'), 500
+
+# 3️⃣ 假数据（用于临时展示，后续可替换为数据库查询）
+FAKE_DOCS = [
+    {
+        "id": 1,
+        "title": "出师表",
+        "author": "诸葛亮",
+        "period": "三国",
+        "year": "建兴五年",
+        "tags": "奏表,政治",
+        "content": "臣亮言：先帝创业未半而中道崩殂……\n愿陛下托臣以讨贼兴复之效……"
+    },
+    {
+        "id": 2,
+        "title": "岳阳楼记",
+        "author": "范仲淹",
+        "period": "北宋",
+        "year": "庆历六年",
+        "tags": "散文,山水",
+        "content": "庆历四年春，滕子京谪守巴陵郡……\n不以物喜，不以己悲……"
+    },
+]
+
+# 4️⃣ 路由 - 只保留用户认证相关和基本路由
+@app.route('/home')
+def home():
+    return render_template('home.html')
+
 
 # ============================================================
 # 5. 用户认证路由（登录/注册/登出）

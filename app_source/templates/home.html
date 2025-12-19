@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+
 {% block title %}首页 · 墨守方志地方文书管理系统{% endblock %}
 
 {% block content %}
@@ -7,15 +8,23 @@
   <img src="{{ url_for('static', filename='home-image.png') }}" alt="历史文献图像" class="hero-image">
 </div>
 
-<!-- **搜索部分放在图片下方，水平排列** -->
+<!-- 搜索部分 搜索提交时会跳转到 /documents 页面 -->
 <div class="search-section">
   <div class="container">
-    <form class="search-form" action="{{ url_for('search') }}" method="get">
-      <input type="text" name="q" placeholder="请输入文书名称，如“永泰文书”..." class="search-input">
+    <form class="search-form" action="{{ url_for('documents') }}" method="get">
+      <input type="text" name="q" placeholder="请输入文书名称，如“永泰文书”..." class="search-input" value="{{ request.args.get('q', '') }}">
+      <select name="period" class="select">
+        <option value="">选择朝代</option>
+        <!--这里需要数据库的同学来修改一下-->>
+        <option value="先秦" {% if request.args.get('dynasty_period') == '先秦' %}selected{% endif %}>先秦</option>
+        <option value="秦汉" {% if request.args.get('dynasty_period') == '秦汉' %}selected{% endif %}>秦汉</option>
+        <option value="魏晋南北朝" {% if request.args.get('dynasty_period') == '魏晋南北朝' %}selected{% endif %}>魏晋南北朝</option>
+        <option value="隋唐" {% if request.args.get('dynasty_period') == '隋唐' %}selected{% endif %}>隋唐</option>
+        <option value="宋元" {% if request.args.get('dynasty_period') == '宋元' %}selected{% endif %}>宋元</option>
+        <option value="明清" {% if request.args.get('dynasty_period') == '明清' %}selected{% endif %}>明清</option>
+      </select>
       <button type="submit" class="btn btn-primary">搜索</button>
-      <button type="button" class="btn btn-ghost">高级搜索</button>
     </form>
   </div>
 </div>
-
 {% endblock %}

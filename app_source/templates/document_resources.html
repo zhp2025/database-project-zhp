@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}文书资源 · 墨守方志地方文书管理系统{% endblock %}
+
+{% block content %}
+<section class="card">
+  <div class="card-header">
+    <h1 class="card-title">{{ document.document_name }} - 资源</h1>
+    <p class="card-subtitle">选择一个资源分类查看具体内容</p>
+  </div>
+
+  <div class="card-body">
+    <div class="content-container">
+      <!-- 左侧分类面板 -->
+      <div class="directory">
+        <ul class="level-1">
+          <li class="directory-item">
+            <span class="directory-toggle">财产交易类</span>
+            <ul class="level-2">
+              <li><a href="#" class="resource-category" data-category="财产交易类">典卖契约</a></li>
+              <li><a href="#" class="resource-category" data-category="财产交易类">承耕契</a></li>
+              <!-- 更多分类 ##需要负责填充数据的同学补充-->
+            </ul>
+          </li>
+          <li class="directory-item">
+            <span class="directory-toggle">法律纠纷类</span>
+            <ul class="level-2">
+              <li><a href="#" class="resource-category" data-category="法律纠纷类">诉状</a></li>
+              <!-- 更多分类 -->
+            </ul>
+          </li>
+          <!-- 更多分类 -->
+        </ul>
+      </div>
+
+      <!-- 右侧资源详情展示区域 -->
+      <div class="right-content" id="resource-details">
+        <p>请选择左侧分类查看详细资源信息。</p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 收藏按钮 -->
+  <div class="document-actions">
+    <a href="{{ url_for('favorites.add', document_id=document.id) }}" class="btn btn-primary">添加到收藏</a>
+  </div>
+</section>
+
+<script>
+  // 当用户点击左侧资源类型时，动态加载对应的资源详情
+  document.querySelectorAll('.resource-category').forEach(item => {
+    item.addEventListener('click', function(event) {
+      event.preventDefault();
+      const category = this.getAttribute('data-category');
+      
+      // 请求后端数据，获取该分类的资源
+      fetch(`/get_resources_by_category/${category}`)
+        .then(response => response.json())
+        .then(data => {
+          const resourceDetailsDiv = document.getElementById('resource-details');
+          if (data.success) {
+            let content = '';
+            data.resources.forEach(resource => {
+              content += `
+                <div class="resource-item">
+                  <h3>${resource.resource_name}</h3>
+                  <p><strong>作者：</strong>${resource.author}</p>
+                  <p><strong>归属地：</strong>${resource.resource_region}</p>
+                  <p><strong>原文：</strong>${resource.original_text}</p>
+                  <p><strong>简体版：</strong>${resource.simplified_text}</p>
+                  <p><strong>白话文翻译：</strong>${resource.vernacular_translation}</p>
+                  <p><strong>图片：</strong><img src="{{ url_for('static', filename=resource.image_path) }}" alt="Resource Image" class="resource-image"></p>
+                  
+                  <!-- 按钮功能 -->
+                  <div class="resource-actions">
+                    <a href="{{ url_for('favorites') }}" class="btn btn-primary">我的收藏</a>
+                    <a href="{{ url_for('notes') }}" class="btn btn-primary">我的笔记</a>
+                    <a href="{{ url_for('reading_history') }}" class="btn btn-primary">我的阅读记录</a>
+                  </div>
+                </div>
+              `;
+            });
+            resourceDetailsDiv.innerHTML = content;
+          } else {
+            resourceDetailsDiv.innerHTML = `<p>未找到相关资源。</p>`;
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching resources:', error);
+        });
+    });
+  });
+</script>
+{% endblock %}
